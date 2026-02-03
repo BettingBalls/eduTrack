@@ -3,6 +3,14 @@ import Header from "../components/header";
 import TaskItem from "../components/taskItem";
 
 export default function TaskScreen() {
+  const data = {
+    title:"Belajar Matematika",
+    date:"Kamis 14 Agustus",
+    time:"09:00 - 10:00",
+    desc:"Belajar soal matematika fungsi kuadrat - logaritma",
+    tag:"MTK" 
+  }
+
   return (
     <View style={styles.container}>
       <Header />
@@ -42,6 +50,7 @@ export default function TaskScreen() {
             desc="Belajar soal matematika fungsi kuadrat - logaritma"
             tag="MTK"
             active
+            data={data}
           />
 
           <TaskItem
@@ -49,6 +58,7 @@ export default function TaskScreen() {
             time="08:00 - 10:00"
             desc="Belajar basic react native dan cara kerja react native"
             tag="PROG"
+            data={data}
           />
 
           <TaskItem
@@ -56,6 +66,7 @@ export default function TaskScreen() {
             time="12:00 - 14:00"
             desc="Belajar soal matematika debit air dan lain-lain"
             tag="MTK"
+            data={data}
           />
 
           <TaskItem
@@ -63,12 +74,14 @@ export default function TaskScreen() {
             time="17:00 - 19:00"
             desc="Basic mandarin"
             tag="BHS"
+            data={data}
           />
           <TaskItem
           title="Main bareng Ruby"
           time="01:00 - 24:00"
           desc="Main bareng Ruby di rumah"
           tag="Lainnya"
+            data={data}
           />
         </ScrollView>
       </View>

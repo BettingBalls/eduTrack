@@ -1,21 +1,49 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Swipeable } from "react-native-gesture-handler";
+// import { useRef } from "react";
 
-export default function TaskItem({ title, time, desc, tag, active }) {
+export default function TaskItem({ title, time, desc, tag, active, data }) {
+  // const swipeableRef = useRef(null);
+
+  // pass data disini
+  const onEdit = () => {
+    // swipeableRef.current?.close();
+    console.log('Edit clicked')
+    router.push({
+      pathname: "/edit/edit",
+      params: { 
+        mode: "edit",
+        data: JSON.stringify(data)
+      },
+    })
+  }
+
+  const onDelete = () => {
+    // swipeableRef.current?.close();
+    console.log('Delete clicked')
+    // Handle delete logic here
+  }
+
+  const onComplete = () => {
+    // swipeableRef.current?.close();
+    console.log('Complete clicked')
+    // Handle complete logic here
+  }
 
   const renderLeftActions = () => {
     return (
       <View style={styles.actions}>
-        <TouchableOpacity style={styles.iconBtn}>
+        <TouchableOpacity style={styles.iconBtn} onPress={onEdit} activeOpacity={0.7}>
           <Ionicons name="create-outline" size={16} color="#4C9AFF" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.iconBtn}>
+        <TouchableOpacity style={styles.iconBtn} onPress={onDelete} activeOpacity={0.7}>
           <Ionicons name="trash-outline" size={16} color="#FF5A5A" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.iconBtn}>
+        <TouchableOpacity style={styles.iconBtn} onPress={onComplete} activeOpacity={0.7}>
           <Ionicons name="checkmark-outline" size={16} color="#2ECC71" />
         </TouchableOpacity>
       </View>
@@ -30,10 +58,11 @@ export default function TaskItem({ title, time, desc, tag, active }) {
         <View style={styles.line} />
       </View>
 
-      <Swipeable
-        renderLeftActions={renderLeftActions}
+      <Swipeable 
+        // ref={swipeableRef} 
+        renderLeftActions={renderLeftActions} 
         overshootLeft={false}
-      >
+        >
         <View style={styles.card}>
           <View style={styles.header}>
             <Text style={styles.title}>{title}</Text>
@@ -86,7 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 14,
     elevation: 3,
-    minWidth : 300,
+    minWidth: 300,
   },
   header: {
     flexDirection: "row",
@@ -144,5 +173,5 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
 });
