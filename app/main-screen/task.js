@@ -118,30 +118,30 @@ const styles = StyleSheet.create({
 },
 
   dayItem: {
-    alignItems: "center",
-    paddingVertical: 6,
-    paddingHorizontal: 8,
-    borderRadius: 12,
+  alignItems: "center",
+  paddingVertical: 6,
+  paddingHorizontal: 8,
+  borderRadius: 12,
   },
 
   dayActive: {
-    backgroundColor: "#EAF2FF",
+  backgroundColor: "#EAF2FF",
   },
 
   dayText: {
-    fontSize: 12,
-    color: "#777",
-    fontWeight: "600",
+  fontSize: 12,
+  color: "#777",
+  fontWeight: "600",
   },
 
   dateText: {
-    fontSize: 12,
-    color: "#999",
+  fontSize: 12,
+  color: "#999",
   },
 
   dayTextActive: {
-    color: "#4C9AFF",
-    fontWeight: "700",
+  color: "#4C9AFF",
+  fontWeight: "700",
   },
 
 });

@@ -2,17 +2,21 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
+import { useState } from "react";
+import HapusModal from "../modals/hapusModal";
+import SelesaiModal from "../modals/selesaiModal";
 // import { useRef } from "react";
 
 export default function TaskItem({ title, time, desc, tag, active, data }) {
-  // const swipeableRef = useRef(null);
+  const [showSelesaiModal, setShowSelesaiModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   // pass data disini
   const onEdit = () => {
     // swipeableRef.current?.close();
     console.log('Edit clicked')
     router.push({
-      pathname: "/edit/edit",
+      pathname: "/add/add",
       params: { 
         mode: "edit",
         data: JSON.stringify(data)
@@ -21,15 +25,11 @@ export default function TaskItem({ title, time, desc, tag, active, data }) {
   }
 
   const onDelete = () => {
-    // swipeableRef.current?.close();
-    console.log('Delete clicked')
-    // Handle delete logic here
+    setShowDeleteModal(true);
   }
 
   const onComplete = () => {
-    // swipeableRef.current?.close();
-    console.log('Complete clicked')
-    // Handle complete logic here
+    setShowSelesaiModal(true);
   }
 
   const renderLeftActions = () => {
@@ -59,7 +59,6 @@ export default function TaskItem({ title, time, desc, tag, active, data }) {
       </View>
 
       <Swipeable 
-        // ref={swipeableRef} 
         renderLeftActions={renderLeftActions} 
         overshootLeft={false}
         >
@@ -79,6 +78,22 @@ export default function TaskItem({ title, time, desc, tag, active, data }) {
           </View>
         </View>
       </Swipeable>
+      <HapusModal
+        visible={showDeleteModal}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={() => {
+          console.log("Terhapus");
+          setShowDeleteModal(false);
+        }}
+    />
+    <SelesaiModal
+        visible={showSelesaiModal}
+        onCancel={() => setShowSelesaiModal(false)}
+        onConfirm={() => {
+          console.log("Terselesaikan");
+          setShowSelesaiModal(false);
+        }}
+      />
     </View>
   );
 }

@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, KeyboardAvoidingView, Platform, ScrollVi
 import { useRouter } from "expo-router";
 import InputWithIcon from "../components/InputWithIcon";
 import PrimaryButton from "../components/PrimaryButton";
+import { API } from "../utils/auth";
 
 export default function Signup() {
   const router = useRouter();
@@ -11,16 +12,23 @@ export default function Signup() {
   const [confirm, setConfirm] = useState("");
   const [phone, setPhone] = useState("");
 
-  function handleSignUp() {
-    if (!username || !password || !confirm) {
-      Alert.alert("Error", "Isi semua field yang wajib ya~");
-      return;
+  async function handleSignUp() {
+    if(!username || !password || !confirm || !phone) {
+      return Alert.alert("Error", "Semua field harus diisi.");
     }
-    if (password !== confirm) {
-      Alert.alert("Error", "Password dan konfirmasi tidak sama.");
-      return;
+    if(password !== confirm) {
+      return Alert.alert("Error", "Password dan konfirmasi passwrod tidak sama")
     }
-    // contoh makin lengkap: panggil API register
+    const res = await fetch(API + "/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password, phone}),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) return alert(data.message || "Register gagal");
+    alert("Register sukses");
     router.push("./login");
   }
 
@@ -36,7 +44,7 @@ export default function Signup() {
         <InputWithIcon icon="lock" placeholder="Ulangi Password" secureTextEntry value={confirm} onChangeText={setConfirm} />
         <InputWithIcon icon="smartphone" placeholder="No Hp" keyboardType="phone-pad" value={phone} onChangeText={setPhone} />
 
-        <PrimaryButton title="Sign Up" onPress={handleSignUp} disabled={!username || !password || !confirm} />
+        <PrimaryButton title="Sign Up" onPress={handleSignUp}/>
 
         <TouchableOpacity style={styles.linkWrap} onPress={() => router.push("./login")}>
           <Text style={styles.linkText}>Sudah punya akun? <Text style={styles.linkAccent}>Login</Text></Text>

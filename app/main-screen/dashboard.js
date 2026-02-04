@@ -2,8 +2,21 @@ import { View, ScrollView, StyleSheet, Text } from "react-native";
 import Header from "../components/header";
 import TaskCard from "../components/taskCard";
 import ProgressChart from "../components/progressChart";
+import { useEffect, useState } from "react";
+import { getUser } from "../utils/auth";
 
 export default function Dashboard() {
+  const [username, setUsername] = useState("");
+  
+  useEffect(() => {
+    const loadUser = async () => {
+      const user = await getUser();
+      if (user) {
+        setUsername(user.username);
+      }
+    };
+    loadUser();
+  })
   return (
     <View style={styles.container}>
       <Header />
@@ -13,7 +26,7 @@ export default function Dashboard() {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.greeting}>Selamat Datang, Daz!</Text>
+          <Text style={styles.greeting}>Selamat Datang{username ? `, ${username}` : ""}!</Text>
 
           <Text style={styles.sectionTitle}>Tugas Terdekat</Text>
 

@@ -1,9 +1,9 @@
 // components/TaskCard.js
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet} from "react-native";
 
-export default function TaskCard({ title, desc, date, time, tag, onPress }) {
+export default function TaskCard({ title, desc, date, time, tag}) {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress}>
+    <View style={styles.card}>
       <View style={styles.topRow}>
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.date}>{date} {time}</Text>
@@ -12,7 +12,7 @@ export default function TaskCard({ title, desc, date, time, tag, onPress }) {
       <View style={styles.tag}>
         <Text style={{ color: "#fff" }}>{tag}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
  

@@ -7,13 +7,25 @@ import {
 import { useRouter } from "expo-router";
 import InputWithIcon from "../components/InputWithIcon";
 import PrimaryButton from "../components/PrimaryButton";
+import { saveUser, API } from "../utils/auth";
+
 
 export default function Login() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleLogin() {
+  async function handleLogin() {
+    const res = await fetch(API + "/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await res.json();
+    if (!res.ok) return alert("Login gagal");
+
+    await saveUser(data.user);
     router.replace("/main-screen/dashboard");
   }
 

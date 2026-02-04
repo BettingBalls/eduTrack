@@ -3,10 +3,12 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput } from "reac
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../components/header";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getUser, logout } from "../utils/auth";
 import EditModal from "../modals/editProfileModal";
 
 export default function Profile() {
+  const [user, setUser] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editType, setEditType] = useState(null);
 
@@ -14,6 +16,21 @@ export default function Profile() {
     setEditType(type);
     setModalVisible(true);
   };
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const storedUser = await getUser();
+      setUser(storedUser);
+    };
+
+    loadUser();
+  }, []);
+
+  const handleLogout = async () => {
+  await logout();
+  router.replace("/screens/login");
+};
+  
   return (
     <View style={styles.container}>
       <Header />
@@ -25,18 +42,15 @@ export default function Profile() {
           <Text style={styles.pageTitle}>Profile Page</Text>
         </View>
 
-        <View style={{ alignItems: "center", marginTop: 20 }}>
-          <Image
-            source={require ("../../assets/images/Kasane Teto - 2.jpg")}
-            style={styles.avatar}
-          />
-          <TouchableOpacity style={styles.uploadBtn}>
-            <Text style={{ color: "#fff", fontWeight: "600" }}>Upload</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={{ alignItems: "center", marginTop: 20 }}> 
+            <Image source={require ("../../assets/images/Kasane Teto - 2.jpg")} style={styles.avatar} /> 
+          <TouchableOpacity style={styles.uploadBtn}> 
+            <Text style={{ color: "#fff", fontWeight: "600" }}>Upload</Text> 
+          </TouchableOpacity> 
+          </View>
 
       <View style={styles.inputGroup}>
-        <TextInput style={styles.input} placeholder="Username" value="Daz" />
+        <TextInput style={styles.input} placeholder="Username" value={user?.username || ""}/>
         <TouchableOpacity onPress={() => openModal("username")}>
           <Ionicons name="create-outline" size={18} style={styles.icon} />
         </TouchableOpacity>
@@ -55,16 +69,12 @@ export default function Profile() {
       </View>
 
       <View style={styles.inputGroup}>
-        <TextInput style={styles.input} placeholder="No HP" value="081234567890" />
+      <TextInput style={styles.input} placeholder="Phone Number" value={user?.phone || ""}/>
         <TouchableOpacity onPress={() => openModal("phone")}>
           <Ionicons name="create-outline" size={18} style={styles.icon} />
         </TouchableOpacity>
       </View>
-
-        <TouchableOpacity
-          style={styles.logoutBtn}
-          onPress={() => router.push("../screens/login")}
-        >
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
           <Text style={{ color: "#fff", fontWeight: "600" }}>Logout</Text>
         </TouchableOpacity>
       </View>

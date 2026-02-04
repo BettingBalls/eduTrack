@@ -1,9 +1,43 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../components/header";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 
 export default function AddTaskScreen() {
+  const { mode, data } = useLocalSearchParams();
+  const isEdit = mode === "edit";
+
+  const taskData = data ? JSON.parse(data) : null;
+  const timeRange = taskData?.time?.split(" - ") || ["", ""];
+
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [date, setDate] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+  const [category, setCategory] = useState("");
+
+  useEffect(() => {
+    if (isEdit && taskData) {
+      setTitle(taskData.title);
+      setDesc(taskData.desc);
+      setDate(taskData.date);
+      setStart(timeRange[0]);
+      setEnd(timeRange[1]);
+      setCategory(taskData.tag);
+    }
+  }, []);
+
+  const onSubmit = () => {
+    if (isEdit) {
+      console.log("UPDATE TASK", { title, desc, date, start, end, category });
+    } else {
+      console.log("ADD TASK", { title, desc, date, start, end, category });
+    }
+    router.back();
+  };
+
   return (
     <View style={styles.container}>
       <Header />
@@ -13,43 +47,65 @@ export default function AddTaskScreen() {
 
           <View style={styles.titleRow}>
             <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={20} color="#333" />
+              <Ionicons name="arrow-back" size={20} color="#333" />
             </TouchableOpacity>
-            <Text style={styles.title}>Tambah Tugas</Text>
+            <Text style={styles.title}>
+              {isEdit ? "Edit Tugas" : "Tambah Tugas"}
+            </Text>
           </View>
 
           <Text style={styles.label}>Judul Tugas</Text>
           <TextInput
-            placeholder="Ex: Belajar Matematika"
             style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Ex: Belajar Matematika"
           />
 
           <Text style={styles.label}>Deskripsi Tugas</Text>
           <TextInput
-            placeholder="Ex: Belajar tentang fungsi dan logaritma"
             style={styles.input}
+            value={desc}
+            onChangeText={setDesc}
+            placeholder="Ex: Belajar tentang fungsi"
           />
 
-          <Text style={styles.label}>Deadline Tanggal Tugas</Text>
+          <Text style={styles.label}>Deadline Tanggal</Text>
           <TextInput
-            placeholder="Jum 20, Agustus, 2025"
             style={styles.input}
+            value={date}
+            onChangeText={setDate}
+            placeholder="Jum 20, Agustus, 2025"
           />
 
-          <Text style={styles.label}>Deadline Jam Tugas</Text>
+          <Text style={styles.label}>Deadline Jam</Text>
           <View style={styles.row}>
-            <TextInput placeholder="08:00" style={[styles.input, styles.time]} />
-            <TextInput placeholder="10:00" style={[styles.input, styles.time]} />
+            <TextInput
+              style={[styles.input, styles.time]}
+              value={start}
+              onChangeText={setStart}
+              placeholder="08:00"
+            />
+            <TextInput
+              style={[styles.input, styles.time]}
+              value={end}
+              onChangeText={setEnd}
+              placeholder="10:00"
+            />
           </View>
 
           <Text style={styles.label}>Kategori</Text>
-          <View style={styles.dropdown}>
-            <Text style={styles.dropdownText}>Pilih kategori</Text>
-            <Ionicons name="chevron-down" size={18} color="#666" />
-          </View>
+            <TouchableOpacity style={styles.dropdown}>
+              <Text style={styles.dropdownText}>
+                {category || "Pilih kategori"}
+              </Text>
+              <Ionicons name="chevron-down" size={18} color="#666" />
+            </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Tambah</Text>
+          <TouchableOpacity style={styles.button} onPress={onSubmit}>
+            <Text style={styles.buttonText}>
+              {isEdit ? "Simpan Perubahan" : "Tambah"}
+            </Text>
           </TouchableOpacity>
 
         </View>
@@ -57,6 +113,7 @@ export default function AddTaskScreen() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
